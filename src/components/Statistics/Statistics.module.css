@@ -1,0 +1,18 @@
+.statistics__title {
+  margin-top: 0;
+  margin-bottom: 20px;
+  padding: 0;
+}
+
+.statistics__list {
+  padding: 0;
+  list-style: none;
+}
+
+.statistics__item:not(:last-child) {
+  margin-bottom: 15px;
+}
+
+.statistics__text {
+  margin: 0;
+}
