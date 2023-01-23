@@ -1,6 +1,8 @@
-// import PropTypes from 'prop-types';
 import { Component } from 'react';
 import { Statistics } from '../Statistics/Statistics';
+import { FeedbackOptions } from 'components/FeedbackOptions/FeedbackOptions';
+import { SectionH2, SectionH1 } from 'components/Section/Section';
+import { Notification } from 'components/Notification/Notification';
 import css from './App.module.css';
 
 export class App extends Component {
@@ -10,24 +12,10 @@ export class App extends Component {
     bad: 0,
   };
 
-  onGoodButtonClick = () => {
+  onFeedbackButtonClick = state => {
     this.setState(prevState => {
       return {
-        good: prevState.good + 1,
-      };
-    });
-  };
-  onNeutralButtonClick = () => {
-    this.setState(prevState => {
-      return {
-        neutral: prevState.neutral + 1,
-      };
-    });
-  };
-  onBadButtonClick = () => {
-    this.setState(prevState => {
-      return {
-        bad: prevState.bad + 1,
+        [state]: prevState[state] + 1,
       };
     });
   };
@@ -37,88 +25,41 @@ export class App extends Component {
   };
 
   countPositiveFeedbackPercentage = ({ good, neutral, bad }) => {
-    // positiveFeedback = {
-    //   good ?? Math.round((good / (good + neutral + bad)) * 100);
-    // }
-
     if (good) {
       return Math.round((good / (good + neutral + bad)) * 100) + '%';
+    } else {
+      return '0%';
     }
   };
 
   render() {
-    // total = this.state;
-
-    // countTotalFeedback = this.state;
-    // const { good, neutral, bad } = this.state;
-
-    // const good = this.state.good;
-    // const neutral = this.state.neutral;
-    // const bad = this.state.bad;
-
     return (
       <div className={css.app__container}>
         <div className={css.feedback}>
-          <h1 className={css.feedback__title}>Please leave feedback</h1>
-          <ul className={css.feedback__buttons}>
-            <li>
-              <button
-                className={css.feedback__buttonsItem}
-                type="button"
-                onClick={this.onGoodButtonClick}
-              >
-                Good
-              </button>
-            </li>
-            <li>
-              <button
-                className={css.feedback__buttonsItem}
-                type="button"
-                onClick={this.onNeutralButtonClick}
-              >
-                Neutral
-              </button>
-            </li>
-            <li>
-              <button
-                className={css.feedback__buttonsItem}
-                type="button"
-                onClick={this.onBadButtonClick}
-              >
-                Bad
-              </button>
-            </li>
-          </ul>
-          <div></div>
+          <SectionH1 title="Please leave feedback">
+            <FeedbackOptions
+              options={Object.keys(this.state)}
+              onFeedbackButtonClick={this.onFeedbackButtonClick}
+            />
+          </SectionH1>
 
-          <Statistics
-            good={this.state.good}
-            neutral={this.state.neutral}
-            bad={this.state.bad}
-            total={this.countTotalFeedback(this.state)}
-            positivePercentage={this.countPositiveFeedbackPercentage(
-              this.state
+          <SectionH2 title="Statistics:">
+            {this.countTotalFeedback(this.state) > 0 ? (
+              <Statistics
+                good={this.state.good}
+                neutral={this.state.neutral}
+                bad={this.state.bad}
+                total={this.countTotalFeedback(this.state)}
+                positivePercentage={this.countPositiveFeedbackPercentage(
+                  this.state
+                )}
+              />
+            ) : (
+              <Notification message="There is no feedback" />
             )}
-          ></Statistics>
+          </SectionH2>
         </div>
       </div>
     );
   }
 }
-
-// export const App = () => {
-//   return (
-//     <div
-//       style={{
-//         height: '100vh',
-//         display: 'flex',
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//         fontSize: 40,
-//         color: '#010101',
-//       }}
-//     >
-//       React homework template
-//     </div>
-//   );
-// };
